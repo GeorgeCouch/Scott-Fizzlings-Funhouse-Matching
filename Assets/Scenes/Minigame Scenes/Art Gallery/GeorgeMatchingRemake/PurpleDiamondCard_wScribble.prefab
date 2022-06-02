@@ -98,6 +98,8 @@ MonoBehaviour:
   cardBack: {fileID: 21300000, guid: a5cade7a7bf22a744b1bf3bcbcb069a0, type: 3}
   matchIntPair: 0
   matched: 0
+  cardNum: 0
+  cardFlipped: 0
 --- !u!61 &-6230908543561978466
 BoxCollider2D:
   m_ObjectHideFlags: 0
