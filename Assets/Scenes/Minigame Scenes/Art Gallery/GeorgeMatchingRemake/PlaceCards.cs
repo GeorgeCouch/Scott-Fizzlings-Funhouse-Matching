@@ -125,8 +125,8 @@ public class PlaceCards : MonoBehaviour
                 // Handle how cards are spanwed/deleted/move at start and end
                 handleLevel();
                 // Ensure cards can't be hovered or flipped while flying in
-                if(reachedBoardPlace)
-                {
+               //if(reachedBoardPlace)
+                //{
                     // Check if two cards are a match
                     StartCoroutine(checkTwoCards());
                     // Make cards hover if you place your mouse over them, this stops when all cards are matched
@@ -134,7 +134,7 @@ public class PlaceCards : MonoBehaviour
                     {
                         handleHoveringCards();
                     }
-                }  
+                //}  
             }
             else
             {
@@ -165,207 +165,236 @@ public class PlaceCards : MonoBehaviour
     // Handle how cards are flipped and if they are a match
     IEnumerator checkTwoCards()
     {
-        // if first card exists, determine if need to flip front or back
-        if (firstCard != null)
-        {
-            if (firstCard.cardFlipped)
+        //if (reachedBoardPlace)
+        //{
+            // if first card exists, determine if need to flip front or back
+            if (firstCard != null)
             {
-                firstCard.transform.rotation = Quaternion.RotateTowards(firstCard.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * cardFlipSpeed);
-                // Change sprite when it looks thinnest to camera
-                if (firstCard.transform.eulerAngles.y >= 80f && firstCard.transform.eulerAngles.y <= 110f)
+                if (firstCard.cardFlipped)
                 {
-                    firstCard.changeCardSpriteToFace();
-                }
-                // set bool true if card is flipped to its face
-                if (firstCard.transform.eulerAngles.y == 180)
-                {
-                    firstCardFlippedFront = true;
-                }
-            }
-            else
-            {
-                // Flip card to back after fail to match
-                if (!firstCard.cardFlipped)
-                {
-                    firstCard.transform.rotation = Quaternion.RotateTowards(firstCard.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * cardFlipSpeed);
+                    firstCard.transform.rotation = Quaternion.RotateTowards(firstCard.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * cardFlipSpeed);
+                    // Change sprite when it looks thinnest to camera
                     if (firstCard.transform.eulerAngles.y >= 80f && firstCard.transform.eulerAngles.y <= 110f)
                     {
-                        firstCard.changeCardSpriteToBack();
+                        firstCard.changeCardSpriteToFace();
                     }
-                    // set bool true if card is flipped to its back
-                    if (firstCard.transform.eulerAngles.y == 0)
+                    // set bool true if card is flipped to its face
+                    if (firstCard.transform.eulerAngles.y == 180)
                     {
-                        firstCardFlippedBack = true;
+                        firstCardFlippedFront = true;
+                    }
+                }
+                else
+                {
+                    // Flip card to back after fail to match
+                    if (!firstCard.cardFlipped)
+                    {
+                        firstCard.transform.rotation = Quaternion.RotateTowards(firstCard.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * cardFlipSpeed);
+                        if (firstCard.transform.eulerAngles.y >= 80f && firstCard.transform.eulerAngles.y <= 110f)
+                        {
+                            firstCard.changeCardSpriteToBack();
+                        }
+                        // set bool true if card is flipped to its back
+                        if (firstCard.transform.eulerAngles.y == 0)
+                        {
+                            firstCardFlippedBack = true;
+                        }
                     }
                 }
             }
-        }
-        // See first card above, this works the same way
-        if (secondCard != null)
-        {
-            if (secondCard.cardFlipped)
+            // See first card above, this works the same way
+            if (secondCard != null)
             {
-                secondCard.transform.rotation = Quaternion.RotateTowards(secondCard.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * cardFlipSpeed);
-                if (secondCard.transform.eulerAngles.y >= 80f && secondCard.transform.eulerAngles.y <= 110f)
+                if (secondCard.cardFlipped)
                 {
-                    secondCard.changeCardSpriteToFace();
-                }
-                if (secondCard.transform.eulerAngles.y == 180)
-                {
-                    secondCardFlippedFront = true;
-                }
-            }
-            else
-            {
-                if (!secondCard.cardFlipped)
-                {
-                    secondCard.transform.rotation = Quaternion.RotateTowards(secondCard.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * cardFlipSpeed);
+                    secondCard.transform.rotation = Quaternion.RotateTowards(secondCard.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * cardFlipSpeed);
                     if (secondCard.transform.eulerAngles.y >= 80f && secondCard.transform.eulerAngles.y <= 110f)
                     {
-                        secondCard.changeCardSpriteToBack();
+                        secondCard.changeCardSpriteToFace();
                     }
-                    if (secondCard.transform.eulerAngles.y == 0)
+                    if (secondCard.transform.eulerAngles.y == 180)
                     {
-                        secondCardFlippedBack = true;
+                        secondCardFlippedFront = true;
+                    }
+                }
+                else
+                {
+                    if (!secondCard.cardFlipped)
+                    {
+                        secondCard.transform.rotation = Quaternion.RotateTowards(secondCard.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * cardFlipSpeed);
+                        if (secondCard.transform.eulerAngles.y >= 80f && secondCard.transform.eulerAngles.y <= 110f)
+                        {
+                            secondCard.changeCardSpriteToBack();
+                        }
+                        if (secondCard.transform.eulerAngles.y == 0)
+                        {
+                            secondCardFlippedBack = true;
+                        }
                     }
                 }
             }
-        }
-        // Check for left mouse click
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Cast ray to where user clicks (GetRayIntersection is the only function I could find that defaultly works with Perspective Camera)
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-
-            // check if an object with a collider was found
-            if (hit.collider != null && !isPointerOverUIObject())
+            // Check for left mouse click
+            if (Input.GetMouseButtonDown(0))
             {
-                // check if object has a Card component 
-                if (hit.collider.gameObject.GetComponent<Card>() != null)
+                // Cast ray to where user clicks (GetRayIntersection is the only function I could find that defaultly works with Perspective Camera)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+
+                // check if an object with a collider was found
+                if (hit.collider != null && !isPointerOverUIObject())
                 {
-                    // check to make sure card isn't already matched
-                    if (hit.collider.gameObject.GetComponent<Card>().matched == false)
+                    // check if object has a Card component 
+                    if (hit.collider.gameObject.GetComponent<Card>() != null)
                     {
-                        // if first card null, make card clicked first card and change sprite to face
-                        if (firstCard == null)
+                        // check to make sure card isn't already matched
+                        if (hit.collider.gameObject.GetComponent<Card>().matched == false)
                         {
-                            firstCard = hit.collider.gameObject.GetComponent<Card>();
-                            firstCard.cardFlipped = true;
-                            // Reset values to prepare for next card flip
-                            firstCardFlippedFront = false;
-                            secondCardFlippedFront = false;
-                            firstCardFlippedBack = false;
-                            secondCardFlippedBack = false;
-                        }
-                        // if second card null, make card clicked second card and change sprite to face
-                        else if (secondCard == null)
-                        {
-                            secondCard = hit.collider.gameObject.GetComponent<Card>();
-                            // if second card == first card set back to null
-                            if (secondCard != firstCard)
+                            // if first card null, make card clicked first card and change sprite to face
+                            if (firstCard == null)
                             {
-                                secondCard.cardFlipped = true;
-                                // if first and second card are a match, change their values to matched, else, wait, flip them back, and set both to null
-                                if (firstCard.matchIntPair == secondCard.matchIntPair)
+                                firstCard = hit.collider.gameObject.GetComponent<Card>();
+                                firstCard.cardFlipped = true;
+                                // Reset values to prepare for next card flip
+                                firstCardFlippedFront = false;
+                                secondCardFlippedFront = false;
+                                firstCardFlippedBack = false;
+                                secondCardFlippedBack = false;
+                            }
+                            // if second card null, make card clicked second card and change sprite to face
+                            else if (secondCard == null)
+                            {
+                                secondCard = hit.collider.gameObject.GetComponent<Card>();
+                                // if second card == first card set back to null
+                                if (secondCard != firstCard)
                                 {
-                                    // Return null until both cards are finished flipping
-                                    while (!firstCardFlippedFront || !secondCardFlippedFront)
+                                    secondCard.cardFlipped = true;
+                                    // if first and second card are a match, change their values to matched, else, wait, flip them back, and set both to null
+                                    if (firstCard.matchIntPair == secondCard.matchIntPair)
                                     {
-                                        yield return null;
-                                    }
-                                    firstCard.matched = true;
-                                    secondCard.matched = true;
-                                    // increment score if level == 6
-                                    if (gameObject.GetComponent<CameraMovement>().level == 6)
-                                    {
-                                        score++;
-                                    }
-                                    // change score text
-                                    ScoreText.GetComponent<Text>().text = "Score: " + score;
-                                    // Check if all cards on board are matched, if so increment level
-                                    for (int i = 0; i < spawnedCards.Count; i++)
-                                    {
-                                        if (spawnedCards[i].GetComponent<Card>().matched)
+                                        // Return null until both cards are finished flipping
+                                        while (!firstCardFlippedFront || !secondCardFlippedFront)
                                         {
-                                            matchedCount++;
-                                            if (matchedCount == spawnedCards.Count)
+                                            yield return null;
+                                        }
+                                        firstCard.matched = true;
+                                        secondCard.matched = true;
+                                        // increment score if level == 6
+                                        if (gameObject.GetComponent<CameraMovement>().level == 6)
+                                        {
+                                            score++;
+                                        }
+                                        // change score text
+                                        ScoreText.GetComponent<Text>().text = "Score: " + score;
+                                        // Check if all cards on board are matched, if so increment level
+                                        for (int i = 0; i < spawnedCards.Count; i++)
+                                        {
+                                            if (spawnedCards[i].GetComponent<Card>().matched)
                                             {
-                                                allCardsMatched = true;
+                                                matchedCount++;
+                                                if (matchedCount == spawnedCards.Count)
+                                                {
+                                                    allCardsMatched = true;
+                                                }
                                             }
                                         }
+                                        // reset matchedCount for next tally
+                                        matchedCount = 0;
                                     }
-                                    // reset matchedCount for next tally
-                                    matchedCount = 0;
-                                }
-                                else
-                                {
-                                    // wait so user can see that cards are not the same
-                                    yield return new WaitForSeconds(wrongCardDelay);
-                                    // flip cards back over
-                                    firstCard.cardFlipped = false;
-                                    secondCard.cardFlipped = false;
-                                    // wait for both cards to be flipped
-                                    while (!firstCardFlippedBack || !secondCardFlippedBack)
+                                    else
                                     {
-                                        yield return null;
+                                        // wait so user can see that cards are not the same
+                                        yield return new WaitForSeconds(wrongCardDelay);
+                                        // flip cards back over
+                                        firstCard.cardFlipped = false;
+                                        secondCard.cardFlipped = false;
+                                        // wait for both cards to be flipped
+                                        while (!firstCardFlippedBack || !secondCardFlippedBack)
+                                        {
+                                            yield return null;
+                                        }
                                     }
+                                    // set both cards to null so another pair can be chosen
+                                    firstCard = null;
+                                    secondCard = null;
                                 }
-                                // set both cards to null so another pair can be chosen
-                                firstCard = null;
                                 secondCard = null;
                             }
-                            secondCard = null;
                         }
                     }
                 }
             }
-        }
+        //}
     }
 
     // handle hovering cards when mouse is over them
     private void handleHoveringCards()
     {
-        // Cast Ray from mouse position
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-        
-        // Loop through all spawned cards
-        for (int i = 0; i < spawnedCards.Count; i++)
-        {
-            // check hitting object
-            if (hit.collider != null && !isPointerOverUIObject())
+        //if (reachedBoardPlace)
+        //{
+            // Cast Ray from mouse position
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+
+            // Loop through all spawned cards
+            for (int i = 0; i < spawnedCards.Count; i++)
             {
-                // check hitting card
-                if (hit.collider.gameObject.GetComponent<Card>())
+                // check hitting object
+                if (hit.collider != null && !isPointerOverUIObject())
                 {
-                    // Use unique identifier cardNum to lower all other cards that are not being hovered
-                    GameObject card = hit.collider.gameObject;
-                    if (card.GetComponent<Card>().cardNum == i && !card.GetComponent<Card>().matched)
+                    // check hitting card
+                    if (hit.collider.gameObject.GetComponent<Card>())
                     {
-                        // We're using perspective camera so we need the direction hover to point towards the camera
-                        Vector3 start = levelBoardPoints[gameObject.GetComponent<CameraMovement>().level - 1][i].transform.position;
-                        Vector3 end = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-                        // Get direction between end and start and specify how many units forward we want to move
-                        Vector3 direction = end - start;
-                        Vector3 newEnd = start + direction.normalized * hoverDistance;
-                        // Check to make sure distance to next waypoint is not approximately 0
-                        if (Vector3.Distance(start, newEnd) > 0.001f)
+                        // Use unique identifier cardNum to lower all other cards that are not being hovered
+                        GameObject card = hit.collider.gameObject;
+                        if (card.GetComponent<Card>().cardNum == i && !card.GetComponent<Card>().matched)
                         {
-                            // Get distances
-                            float totalDistance = Vector3.Distance(start, newEnd);
-                            float currentDistance = Vector3.Distance(spawnedCards[i].transform.position, newEnd);
+                            // We're using perspective camera so we need the direction hover to point towards the camera
+                            Vector3 start = levelBoardPoints[gameObject.GetComponent<CameraMovement>().level - 1][i].transform.position;
+                            Vector3 end = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                            // Get direction between end and start and specify how many units forward we want to move
+                            Vector3 direction = end - start;
+                            Vector3 newEnd = start + direction.normalized * hoverDistance;
+                            // Check to make sure distance to next waypoint is not approximately 0
+                            if (Vector3.Distance(start, newEnd) > 0.001f)
+                            {
+                                // Get distances
+                                float totalDistance = Vector3.Distance(start, newEnd);
+                                float currentDistance = Vector3.Distance(spawnedCards[i].transform.position, newEnd);
 
-                            // Convert distance to 0.0 through 1.0 to compare to X value on animation graph 
-                            float speedBasedOnPosition = currentDistance / totalDistance;
+                                // Convert distance to 0.0 through 1.0 to compare to X value on animation graph 
+                                float speedBasedOnPosition = currentDistance / totalDistance;
 
-                            // Get Y value on animation graph for speed. 1f - cardHoverSpeedCurve ensures graph is read from left to right for designers
-                            float currentSpeed = cardHoverSpeedCurve.Evaluate(1f - speedBasedOnPosition);
+                                // Get Y value on animation graph for speed. 1f - cardHoverSpeedCurve ensures graph is read from left to right for designers
+                                float currentSpeed = cardHoverSpeedCurve.Evaluate(1f - speedBasedOnPosition);
 
-                            // MoveTowards next waypoint at currentSpeed
-                            spawnedCards[i].transform.position = Vector3.MoveTowards(spawnedCards[i].transform.position, newEnd, Time.deltaTime * currentSpeed);
+                                // MoveTowards next waypoint at currentSpeed
+                                spawnedCards[i].transform.position = Vector3.MoveTowards(spawnedCards[i].transform.position, newEnd, Time.deltaTime * currentSpeed);
+                            }
+                        }
+                        else
+                        {
+                            // Move from camera to board point
+                            Vector3 start = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
+                            Vector3 end = levelBoardPoints[gameObject.GetComponent<CameraMovement>().level - 1][i].transform.position;
+                            // Check to make sure distance to next waypoint is not approximately 0
+                            if (Vector3.Distance(start, end) > 0.001f)
+                            {
+                                // Get distances
+                                float totalDistance = Vector3.Distance(start, end);
+                                float currentDistance = Vector3.Distance(spawnedCards[i].transform.position, end);
+
+                                // Convert distance to 0.0 through 1.0 to compare to X value on animation graph 
+                                float speedBasedOnPosition = currentDistance / totalDistance;
+
+                                // Get Y value on animation graph for speed. 1f - cardLowerSpeedCurve ensures graph is read from left to right for designers
+                                float currentSpeed = cardLowerSpeedCurve.Evaluate(1f - speedBasedOnPosition);
+
+                                // MoveTowards next waypoint at currentSpeed
+                                spawnedCards[i].transform.position = Vector3.MoveTowards(spawnedCards[i].transform.position, end, Time.deltaTime * currentSpeed);
+                            }
                         }
                     }
+                    // Lower all cards if card component not found on object
                     else
                     {
                         // Move from camera to board point
@@ -389,10 +418,9 @@ public class PlaceCards : MonoBehaviour
                         }
                     }
                 }
-                // Lower all cards if card component not found on object
+                // Lower all cards if hit.colider == null
                 else
                 {
-                    // Move from camera to board point
                     Vector3 start = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
                     Vector3 end = levelBoardPoints[gameObject.GetComponent<CameraMovement>().level - 1][i].transform.position;
                     // Check to make sure distance to next waypoint is not approximately 0
@@ -413,29 +441,7 @@ public class PlaceCards : MonoBehaviour
                     }
                 }
             }
-            // Lower all cards if hit.colider == null
-            else
-            {
-                Vector3 start = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
-                Vector3 end = levelBoardPoints[gameObject.GetComponent<CameraMovement>().level - 1][i].transform.position;
-                // Check to make sure distance to next waypoint is not approximately 0
-                if (Vector3.Distance(start, end) > 0.001f)
-                {
-                    // Get distances
-                    float totalDistance = Vector3.Distance(start, end);
-                    float currentDistance = Vector3.Distance(spawnedCards[i].transform.position, end);
-
-                    // Convert distance to 0.0 through 1.0 to compare to X value on animation graph 
-                    float speedBasedOnPosition = currentDistance / totalDistance;
-
-                    // Get Y value on animation graph for speed. 1f - cardLowerSpeedCurve ensures graph is read from left to right for designers
-                    float currentSpeed = cardLowerSpeedCurve.Evaluate(1f - speedBasedOnPosition);
-
-                    // MoveTowards next waypoint at currentSpeed
-                    spawnedCards[i].transform.position = Vector3.MoveTowards(spawnedCards[i].transform.position, end, Time.deltaTime * currentSpeed);
-                }
-            }
-        }
+        //}
     }
     
     private void handleLevel()
