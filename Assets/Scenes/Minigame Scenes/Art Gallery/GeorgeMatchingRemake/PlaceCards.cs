@@ -125,8 +125,8 @@ public class PlaceCards : MonoBehaviour
                 // Handle how cards are spanwed/deleted/move at start and end
                 handleLevel();
                 // Ensure cards can't be hovered or flipped while flying in
-               //if(reachedBoardPlace)
-                //{
+               if(reachedBoardPlace)
+               {
                     // Check if two cards are a match
                     StartCoroutine(checkTwoCards());
                     // Make cards hover if you place your mouse over them, this stops when all cards are matched
@@ -134,7 +134,7 @@ public class PlaceCards : MonoBehaviour
                     {
                         handleHoveringCards();
                     }
-                //}  
+               }  
             }
             else
             {
