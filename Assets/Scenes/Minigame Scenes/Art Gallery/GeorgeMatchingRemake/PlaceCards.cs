@@ -637,7 +637,6 @@ public class PlaceCards : MonoBehaviour
             spawnOrder.Add(i);
         }
         // Randomize array order
-        Random r = new Random();
         for (int i = spawnOrder.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
